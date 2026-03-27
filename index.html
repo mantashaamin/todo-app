@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>To-Do App</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <div class="container">
+    <h2>My Tasks</h2>
+
+    <div class="top">
+      <input id="text" placeholder="Enter task" />
+
+      <select id="priority">
+        <option value="low">Low</option>
+        <option value="medium" selected>Medium</option>
+        <option value="high">High</option>
+      </select>
+
+      <button id="add">+</button>
+    </div>
+
+    <!-- Emoji Bar -->
+    <div class="emoji-bar">
+      <span onclick="addEmoji('🔥')">🔥</span>
+      <span onclick="addEmoji('✅')">✅</span>
+      <span onclick="addEmoji('💪')">💪</span>
+      <span onclick="addEmoji('📚')">📚</span>
+      <span onclick="addEmoji('🛒')">🛒</span>
+    </div>
+
+    <p id="progress">0% completed</p>
+
+    <ul id="list"></ul>
+  </div>
+
+  <script src="script.js"></script>
+
+</body>
+</html>
