@@ -1,117 +1,193 @@
-function addEmoji(emoji) {
-  let input = document.getElementById("text");
-  input.value += emoji;
-  input.focus();
-}
+document.addEventListener("DOMContentLoaded", () => {
 
-function saveTasks() {
-  let tasks = [];
+  // GREETING
+  const greeting = document.getElementById("greeting");
+  const hour = new Date().getHours();
 
-  document.querySelectorAll("li").forEach(li => {
-    let text = li.querySelector(".task-text").textContent;
-    let priority = li.querySelector(".badge").textContent;
-    let done = li.querySelector("input").checked;
+  if (hour < 12) greeting.innerText = "Good Morning ☀️";
+  else if (hour < 17) greeting.innerText = "Good Afternoon 🌤️";
+  else greeting.innerText = "Good Evening 🌙";
 
-    tasks.push({ text, priority, done });
+  // WEATHER
+  const apiKey = "1ac2d1f414dd90bba9d2edfa23c2774f";
+  const cityInput = document.getElementById("cityInput");
+  const searchBtn = document.getElementById("searchBtn");
+  const result = document.getElementById("weatherResult");
+  const clearBtn = document.getElementById("clearBtn");
+
+  searchBtn.onclick = getWeather;
+
+  cityInput.addEventListener("input", () => {
+    clearBtn.style.display = cityInput.value ? "block" : "none";
   });
 
-  localStorage.setItem("tasks", JSON.stringify(tasks));
-}
-
-function updateProgress() {
-  let tasks = document.querySelectorAll("li");
-  let done = document.querySelectorAll("li input:checked").length;
-
-  let percent = tasks.length ? Math.round((done / tasks.length) * 100) : 0;
-
-  document.getElementById("progress").textContent = percent + "% completed";
-}
-
-function createTaskElement(text, priority, done = false) {
-  let li = document.createElement("li");
-
-  let check = document.createElement("input");
-  check.type = "checkbox";
-  check.checked = done;
-
-  let span = document.createElement("span");
-  span.textContent = text;
-  span.className = "task-text";
-
-  if (done) span.style.textDecoration = "line-through";
-
-  check.onchange = function() {
-    span.style.textDecoration = check.checked ? "line-through" : "none";
-    saveTasks();
-    updateProgress();
+  clearBtn.onclick = () => {
+    cityInput.value = "";
+    clearBtn.style.display = "none";
+    result.innerHTML = "<p>Search a city to see weather</p>";
+    cityInput.focus();
   };
 
-  let badge = document.createElement("span");
-  badge.textContent = priority;
-  badge.className = "badge " + priority;
+  cityInput.addEventListener("keypress", (e) => {
+    if (e.key === "Enter") getWeather();
+  });
 
-  let editBtn = document.createElement("button");
-  editBtn.textContent = "Edit";
-  editBtn.className = "edit";
+  function getWeather() {
+    const city = cityInput.value.trim();
 
-  editBtn.onclick = function() {
-    let newValue = prompt("Edit task:", span.textContent);
-    if (newValue) {
-      span.textContent = newValue;
-      saveTasks();
+    if (!city) {
+      result.innerHTML = "Enter a city";
+      return;
     }
-  };
 
-  let delBtn = document.createElement("button");
-  delBtn.textContent = "X";
-  delBtn.className = "delete";
+    result.innerHTML = "Loading...";
 
-  delBtn.onclick = function() {
-    li.remove();
-    saveTasks();
-    updateProgress();
-  };
+    fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`)
+      .then(res => {
+        if (!res.ok) {
+          throw new Error("City not found");
+        }
+        return res.json();
+      })
+      .then(data => {
 
-  li.appendChild(check);
-  li.appendChild(span);
-  li.appendChild(badge);
-  li.appendChild(editBtn);
-  li.appendChild(delBtn);
+        const icon = data.weather[0].icon;
 
-  return li;
-}
+        const now = new Date();
+        const utc = now.getTime() + now.getTimezoneOffset() * 60000;
+        const cityTime = new Date(utc + data.timezone * 1000);
 
-document.getElementById("add").addEventListener("click", function() {
-  let text = document.getElementById("text").value;
-  let priority = document.getElementById("priority").value;
+        const time = cityTime.toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit"
+        });
 
-  if (text === "") {
-    alert("Enter task");
-    return;
+        result.innerHTML = `
+          <h3>${data.name}</h3>
+
+          <!-- IMAGE FIX -->
+          <div style="font-size:50px; margin:10px 0;">
+  ${getWeatherEmoji(icon)}
+</div>
+
+          <h2>${Math.round(data.main.temp)}°C</h2>
+
+          <p>Condition: ${data.weather[0].main}</p>
+          <p>Humidity: ${data.main.humidity}%</p>
+          <p>Wind: ${data.wind.speed} m/s</p>
+          <p>Local Time: ${time}</p>
+        `;
+      })
+      .catch(() => {
+        result.innerHTML = "City not found ❌";
+      });
   }
 
-  let li = createTaskElement(text, priority);
-  document.getElementById("list").appendChild(li);
+  // EMOJI FUNCTION (FIXED)
+  function getWeatherEmoji(icon) {
+    if (icon.includes("d")) {
+      if (icon.startsWith("01")) return "☀️";
+      if (icon.startsWith("02") || icon.startsWith("03") || icon.startsWith("04")) return "⛅";
+      if (icon.startsWith("09") || icon.startsWith("10")) return "🌧️";
+      if (icon.startsWith("11")) return "⛈️";
+      if (icon.startsWith("13")) return "❄️";
+      if (icon.startsWith("50")) return "🌫️";
+    } else {
+      if (icon.startsWith("01")) return "🌙";
+      if (icon.startsWith("02") || icon.startsWith("03") || icon.startsWith("04")) return "☁️";
+      if (icon.startsWith("09") || icon.startsWith("10")) return "🌧️";
+      if (icon.startsWith("11")) return "⛈️";
+      if (icon.startsWith("13")) return "❄️";
+      if (icon.startsWith("50")) return "🌫️";
+    }
 
-  document.getElementById("text").value = "";
-
-  saveTasks();
-  updateProgress();
-});
-
-document.getElementById("text").addEventListener("keypress", function(e) {
-  if (e.key === "Enter") {
-    document.getElementById("add").click();
+    return "🌍";
   }
+
 });
 
-window.onload = function() {
+  // TODO
   let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
 
-  tasks.forEach(task => {
-    let li = createTaskElement(task.text, task.priority, task.done);
-    document.getElementById("list").appendChild(li);
-  });
+  const taskInput = document.getElementById("taskInput");
+  const addBtn = document.getElementById("addBtn");
+  const taskList = document.getElementById("taskList");
+  const counter = document.getElementById("taskCounter");
 
-  updateProgress();
-};
+  const allBtn = document.getElementById("allBtn");
+  const activeBtn = document.getElementById("activeBtn");
+  const completedBtn = document.getElementById("completedBtn");
+  const clearCompletedBtn = document.getElementById("clearCompleted");
+
+  function renderTasks() {
+    taskList.innerHTML = "";
+
+    tasks.forEach((task, index) => {
+      const li = document.createElement("li");
+
+      if (task.completed) li.classList.add("completed");
+
+      li.innerHTML = `
+        <input type="checkbox" ${task.completed ? "checked" : ""}>
+        <span>${task.text}</span>
+        <button>🗑️</button>
+      `;
+
+      li.querySelector("input").onchange = () => {
+        tasks[index].completed = !tasks[index].completed;
+        saveTasks();
+        renderTasks();
+      };
+
+      li.querySelector("button").onclick = () => {
+        tasks.splice(index, 1);
+        saveTasks();
+        renderTasks();
+      };
+
+      taskList.appendChild(li);
+    });
+
+    updateCounter();
+  }
+
+  function saveTasks() {
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+  }
+
+  addBtn.onclick = () => {
+    const text = taskInput.value.trim();
+    if (!text) return;
+
+    tasks.push({ text, completed: false });
+    taskInput.value = "";
+    saveTasks();
+    renderTasks();
+  };
+
+  function updateCounter() {
+    const remaining = tasks.filter(t => !t.completed).length;
+    counter.innerText = tasks.length === 0 ? "No tasks yet" : `${remaining} tasks remaining`;
+  }
+
+  allBtn.onclick = () => renderTasks();
+
+  activeBtn.onclick = () => {
+    document.querySelectorAll("#taskList li").forEach((li, i) => {
+      li.style.display = tasks[i].completed ? "none" : "flex";
+    });
+  };
+
+  completedBtn.onclick = () => {
+    document.querySelectorAll("#taskList li").forEach((li, i) => {
+      li.style.display = tasks[i].completed ? "flex" : "none";
+    });
+  };
+
+  clearCompletedBtn.onclick = () => {
+    tasks = tasks.filter(t => !t.completed);
+    saveTasks();
+    renderTasks();
+  };
+
+  renderTasks();
