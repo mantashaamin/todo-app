@@ -1,42 +1,53 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>To-Do App</title>
+  <title>Productivity Dashboard</title>
   <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-  <div class="container">
-    <h2>My Tasks</h2>
+<div class="container">
 
-    <div class="top">
-      <input id="text" placeholder="Enter task" />
+  <h1 id="greeting">Good Evening 🌙</h1>
 
-      <select id="priority">
-        <option value="low">Low</option>
-        <option value="medium" selected>Medium</option>
-        <option value="high">High</option>
-      </select>
+  <!-- WEATHER -->
+  <div class="weather">
 
-      <button id="add">+</button>
+    <div class="search-box">
+      <div class="input-wrapper">
+        <input type="text" id="cityInput" placeholder="Search city">
+        <span id="clearBtn">✖</span>
+      </div>
+
+      <button id="searchBtn">Search</button>
     </div>
 
-    <!-- Emoji Bar -->
-    <div class="emoji-bar">
-      <span onclick="addEmoji('🔥')">🔥</span>
-      <span onclick="addEmoji('✅')">✅</span>
-      <span onclick="addEmoji('💪')">💪</span>
-      <span onclick="addEmoji('📚')">📚</span>
-      <span onclick="addEmoji('🛒')">🛒</span>
+    <div id="weatherResult">
+      <p>Search a city to see weather</p>
     </div>
 
-    <p id="progress">0% completed</p>
-
-    <ul id="list"></ul>
   </div>
 
-  <script src="script.js"></script>
+  <!-- TODO -->
+  <div class="todo">
+    <input type="text" id="taskInput" placeholder="Add a task">
+    <button id="addBtn">+</button>
 
+    <ul id="taskList"></ul>
+
+    <div class="controls">
+      <button id="allBtn">All</button>
+      <button id="activeBtn">Active</button>
+      <button id="completedBtn">Completed</button>
+    </div>
+
+    <p id="taskCounter">No tasks yet</p>
+    <button id="clearCompleted">Clear Completed</button>
+  </div>
+
+</div>
+
+<script src="script.js"></script>
 </body>
 </html>
