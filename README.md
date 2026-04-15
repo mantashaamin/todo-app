@@ -1,5 +1,11 @@
 # 🚀 Productivity Dashboard (To-Do + Weather App)
 
+ ![HTML](https://img.shields.io/badge/HTML-5-orange)
+![CSS](https://img.shields.io/badge/CSS-3-blue)
+![JavaScript](https://img.shields.io/badge/JavaScript-ES6-yellow)
+![API](https://img.shields.io/badge/API-OpenWeather-green)
+![Status](https://img.shields.io/badge/Status-Live-success)
+
 A simple yet functional **Productivity Dashboard** built during my internship at Cognifyz Technologies.  
 This project combines a **To-Do App** and a **Weather App** into a single interface.
 
