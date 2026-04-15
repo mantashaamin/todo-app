@@ -1,29 +1,47 @@
-# 📝 To-Do App
+🧩 Project Title
 
-A modern To-Do application built using HTML, CSS, and JavaScript.
+Productivity Dashboard (To-Do + Weather App)
 
-## 🚀 Features
-- Add, edit, and delete tasks
-- Priority tagging (Low, Medium, High)
-- Emoji support 🔥✅💪
-- Task completion tracking
-- Local storage (data saved even after refresh)
+📌 Description
 
-## 🛠️ Tech Stack
-- HTML
-- CSS
-- JavaScript
+This project is a Productivity Dashboard developed during my internship at Cognifyz Technologies.
 
-## 🌐 Live Demo
-👉 https://mantashaamin.github.io/todo-app/
+Instead of a fixed project, problem statements were provided, and I designed a solution by combining a To-Do application with a Weather application.
 
-## 📌 What I Learned
-- DOM manipulation
-- Event handling
-- Local storage usage
-- UI/UX improvements
+The goal was to create a functional and user-friendly dashboard that integrates task management with real-time data.
 
-## 📷 Preview
-(Add screenshot here later)
+🚀 Features
+📝 To-Do App
+Add tasks
+Delete tasks
+Mark tasks as completed
+Filter tasks (All / Active / Completed)
+Data stored using Local Storage
+🌦️ Weather App
+Search weather by city
+Displays:
+Temperature
+Weather condition
+Humidity
+Wind speed
+Local time
+Uses API for real-time data
+🛠️ Technologies Used
+HTML
+CSS
+JavaScript
+OpenWeather API
+Local Storage
+🎯 Learning Outcomes
+Understanding DOM manipulation
+Working with APIs (fetch, JSON handling)
+Handling asynchronous operations
+Debugging and error handling
+Improving UI step by step
+Converting problem statements into real solutions
+🌐 Live Project
 
----
+👉 https://mantashaamin.github.io/weather-todo-app/
+
+
+
